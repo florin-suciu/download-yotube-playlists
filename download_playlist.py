@@ -4,8 +4,6 @@ from pytube import Playlist
 
 
 def download_playlist(playlist_url, location):
-    print(playlist_url)
-    print(location)
     pl = Playlist(playlist_url)
     pl.download_all(location)
 
