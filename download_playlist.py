@@ -17,7 +17,7 @@ if __name__ == "__main__":
             continue
 
         folder = slugify(p.title)
-        filename = f'{slugify(video.title)}'
+        filename = f'{slugify(video.author, separator=" ")} - {slugify(video.title, separator=" ")}'
         full_path = os.path.join(folder, filename)
 
         # if file is already downloaded, skip
