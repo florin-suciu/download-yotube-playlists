@@ -10,11 +10,22 @@ if __name__ == "__main__":
     p = Playlist(PLAYLIST_URL)
     print(f'Downloading playlist: {p.title}')
     for video in p.videos:
-        audio_streams = video.streams.filter(only_audio=True, file_extension='mp4').order_by('abr').desc()
-        print(f'Downloading: {video.title}, abr={audio_streams[0].abr}')
+        try:
+            audio_streams = video.streams.filter(only_audio=True, file_extension='mp4').order_by('abr').desc()
+        except Exception as e:
+            print(f'Cannot download {video.title}. Error: {e}')
+            continue
+
         folder = slugify(p.title)
         filename = f'{slugify(video.title)}'
         full_path = os.path.join(folder, filename)
+
+        # if file is already downloaded, skip
+        if os.path.exists(f'{full_path}.mp4'):
+            print(f'Skipping {full_path}.mp4 as it already exists')
+            continue
+
+        print(f'Downloading: {video.title}, abr={audio_streams[0].abr}')
         audio_streams[0].download(output_path=folder, filename=f"{filename}.mp4")
         print(f'Downloaded: {full_path}.mp4')
 
